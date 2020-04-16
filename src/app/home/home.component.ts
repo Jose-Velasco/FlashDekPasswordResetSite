@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder) {}
 
   ngOnInit() {
+    // used to get the uid and token form the url
+    // to be able to send it with the body of the post request to the server
     this.paramsSub = this.route.paramMap.subscribe(params => {
       this.uid = params.get("uid");
       this.token = params.get("token");
@@ -42,6 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    // only hit server when form information is valid
     if(this.passwordResetForm.invalid) {
       this.isError = true;
       this.alertMessage = "Form is invalid try again"
@@ -61,7 +64,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, error => {
       this.isError = true;
       this.isSuccess = false;
-      this.alertMessage = "Error while processing your request try again";
+      // gets the key from the key value pair in order to display the error message
+      const errorKey = Object.keys(error.error)[0];
+      this.alertMessage = "Error while processing your request try again: " + JSON.stringify(error.error[errorKey]);
     })
 
   }
